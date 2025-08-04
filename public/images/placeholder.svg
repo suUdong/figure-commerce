@@ -1,0 +1,7 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="400" height="400" fill="#F3F4F6"/>
+<path d="M150 180C150 174.477 154.477 170 160 170H240C245.523 170 250 174.477 250 180V220C250 225.523 245.523 230 240 230H160C154.477 230 150 225.523 150 220V180Z" stroke="#9CA3AF" stroke-width="2"/>
+<circle cx="175" cy="190" r="5" fill="#9CA3AF"/>
+<path d="M240 210L220 190L200 210L180 190L160 210" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="200" y="260" text-anchor="middle" fill="#6B7280" font-family="Arial, sans-serif" font-size="14">상품 이미지</text>
+</svg>

@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 사용자 모델
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cartItems CartItem[]
+  orders    Order[]
+
+  @@map("users")
+}
+
+// 카테고리 모델
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  products Product[]
+
+  @@map("categories")
+}
+
+// 상품 모델
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Int      // 원 단위로 저장 (소수점 방지)
+  imageUrl    String?
+  stock       Int      @default(0)
+  categoryId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category   Category    @relation(fields: [categoryId], references: [id])
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@map("products")
+}
+
+// 장바구니 아이템 모델
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("cart_items")
+}
+
+// 할인 모델
+model Discount {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  type        DiscountType // FIXED_AMOUNT(정액), PERCENTAGE(정률)
+  value       Int         // 할인 금액(원) 또는 퍼센트(%)
+  minAmount   Int?        // 최소 주문 금액
+  maxAmount   Int?        // 최대 할인 금액 (정률할인시)
+  isActive    Boolean     @default(true)
+  validFrom   DateTime
+  validTo     DateTime
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  orders Order[]
+
+  @@map("discounts")
+}
+
+// 주문 모델
+model Order {
+  id               String      @id @default(cuid())
+  userId           String
+  status           OrderStatus @default(PENDING)
+  totalAmount      Int         // 할인 전 총 금액
+  discountAmount   Int         @default(0) // 할인 금액
+  finalAmount      Int         // 최종 결제 금액
+  discountId       String?
+  shippingAddress  String
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  user     User       @relation(fields: [userId], references: [id])
+  discount Discount?  @relation(fields: [discountId], references: [id])
+  items    OrderItem[]
+
+  @@map("orders")
+}
+
+// 주문 아이템 모델
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Int      // 주문 당시 상품 가격
+  createdAt DateTime @default(now())
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+// 할인 타입 enum
+enum DiscountType {
+  FIXED_AMOUNT  // 정액 할인
+  PERCENTAGE    // 정률 할인
+}
+
+// 주문 상태 enum
+enum OrderStatus {
+  PENDING     // 주문 대기
+  CONFIRMED   // 주문 확인
+  SHIPPED     // 배송 중
+  DELIVERED   // 배송 완료
+  CANCELLED   // 주문 취소
+}

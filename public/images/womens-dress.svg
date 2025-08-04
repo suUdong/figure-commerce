@@ -1,0 +1,8 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="400" height="400" fill="#FEF3F4"/>
+<path d="M170 80C170 66.7452 180.745 56 194 56H206C219.255 56 230 66.7452 230 80V120H260L320 320H80L140 120H170V80Z" fill="#FF67B2" stroke="#EE3095" stroke-width="2"/>
+<circle cx="180" cy="140" r="4" fill="#FFFFFF"/>
+<circle cx="200" cy="160" r="4" fill="#FFFFFF"/>
+<circle cx="220" cy="140" r="4" fill="#FFFFFF"/>
+<text x="200" y="360" text-anchor="middle" fill="#374F68" font-family="Arial, sans-serif" font-size="16" font-weight="bold">여성 원피스</text>
+</svg>

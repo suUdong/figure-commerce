@@ -1,0 +1,6 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="400" height="400" fill="#EFF6FF"/>
+<rect x="80" y="140" width="240" height="140" rx="8" fill="#374F68"/>
+<rect x="90" y="150" width="220" height="120" fill="black"/>
+<text x="200" y="330" text-anchor="middle" fill="#374F68" font-family="Arial, sans-serif" font-size="18" font-weight="bold">MacBook Air</text>
+</svg>

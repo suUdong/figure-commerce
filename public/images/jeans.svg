@@ -1,0 +1,7 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="400" height="400" fill="#1C408D"/>
+<path d="M140 80H260V320H140V80Z" fill="#374F68" stroke="#2563EB" stroke-width="2"/>
+<path d="M180 120H220V160H180V120Z" fill="#1538F6" stroke="#FFFFFF" stroke-width="1"/>
+<line x1="160" y1="100" x2="240" y2="100" stroke="#FFFFFF" stroke-width="2"/>
+<text x="200" y="360" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">청바지</text>
+</svg>
