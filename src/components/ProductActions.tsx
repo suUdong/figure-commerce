@@ -23,7 +23,7 @@ export default function ProductActions({ product }: ProductActionsProps) {
   const [loading, setLoading] = useState(false)
 
   // 현재는 하드코딩된 사용자 ID 사용 (실제로는 인증 시스템에서 가져와야 함)
-  const userId = 'test-user-1'
+  const userId = 'cmdy6ozgb0000qis4qjrb6z7z'
 
   const handleAddToCart = async () => {
     if (product.stock === 0) return
@@ -47,6 +47,8 @@ export default function ProductActions({ product }: ProductActionsProps) {
 
       if (response.ok) {
         alert('장바구니에 추가되었습니다!')
+        // 장바구니 업데이트 이벤트 발생
+        window.dispatchEvent(new CustomEvent('cart-updated'))
       } else {
         alert(data.error || '장바구니 추가 중 오류가 발생했습니다')
       }

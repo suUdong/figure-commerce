@@ -1,36 +1,47 @@
+'use client'
+
 import { notFound } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import { formatPrice } from '@/lib/utils'
-import prisma from '@/lib/prisma'
 
 interface OrderDetailPageProps {
   params: Promise<{ id: string }>
 }
 
-async function getOrder(id: string) {
-  const order = await prisma.order.findUnique({
-    where: { id },
-    include: {
-      items: {
-        include: {
-          product: {
-            include: {
-              category: true
-            }
-          }
-        }
-      },
-      discount: true,
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true
-        }
-      }
+interface OrderItem {
+  id: string
+  quantity: number
+  price: number
+  product: {
+    id: string
+    name: string
+    imageUrl: string | null
+    category: {
+      name: string
     }
-  })
-  return order
+  }
+}
+
+interface Order {
+  id: string
+  status: string
+  totalAmount: number
+  discountAmount: number
+  finalAmount: number
+  shippingAddress: string
+  createdAt: string
+  items: OrderItem[]
+  discount?: {
+    id: string
+    name: string
+    description: string | null
+  }
+  user: {
+    id: string
+    name: string
+    email: string
+  }
 }
 
 const statusMessages = {
@@ -41,12 +52,97 @@ const statusMessages = {
   CANCELLED: { text: '주문 취소', color: 'bg-red-100 text-red-800' }
 }
 
-export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
-  const { id } = await params
-  const order = await getOrder(id)
+export default function OrderDetailPage({ params }: OrderDetailPageProps) {
+  const [order, setOrder] = useState<Order | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const { id } = await params
+        const response = await fetch(`/api/orders/${id}`)
+        
+        if (response.status === 404) {
+          notFound()
+          return
+        }
+        
+        if (!response.ok) {
+          throw new Error('주문 조회에 실패했습니다')
+        }
+        
+        const data = await response.json()
+        setOrder(data.order)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '오류가 발생했습니다')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchOrder()
+  }, [params])
+
+  const handleCancelOrder = async () => {
+    if (!order || !confirm('정말 주문을 취소하시겠습니까?')) return
+
+    try {
+      const response = await fetch(`/api/orders/${order.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'CANCELLED' })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setOrder(data.order)
+        alert('주문이 취소되었습니다.')
+      } else {
+        alert('주문 취소에 실패했습니다.')
+      }
+    } catch (error) {
+      alert('주문 취소 중 오류가 발생했습니다.')
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">주문 정보를 불러오는 중...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-red-600 mb-4">오류가 발생했습니다</h1>
+            <p className="text-gray-600 mb-8">{error}</p>
+            <a 
+              href="/products" 
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              상품 둘러보기
+            </a>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   if (!order) {
     notFound()
+    return null
   }
 
   const statusInfo = statusMessages[order.status as keyof typeof statusMessages]
@@ -91,7 +187,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">주문 상품</h2>
               <div className="space-y-4">
-                {order.items.map((item) => (
+                {order.items.map((item: OrderItem) => (
                   <div key={item.id} className="flex items-center space-x-4 p-4 border rounded-lg">
                     <div className="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0">
                       {item.product.imageUrl ? (
@@ -195,12 +291,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
               {order.status === 'PENDING' && (
                 <button
                   className="block w-full bg-red-600 text-white text-center py-3 px-4 rounded-md font-medium hover:bg-red-700 transition-colors"
-                  onClick={() => {
-                    if (confirm('정말 주문을 취소하시겠습니까?')) {
-                      // 주문 취소 로직 (향후 구현)
-                      alert('주문 취소 기능은 향후 구현될 예정입니다.')
-                    }
-                  }}
+                  onClick={handleCancelOrder}
                 >
                   주문 취소
                 </button>

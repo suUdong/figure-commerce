@@ -36,6 +36,8 @@ async function main() {
   ])
 
   console.log('사용자 생성 완료')
+  console.log(`첫 번째 사용자 ID: ${users[0].id}`)
+  console.log(`두 번째 사용자 ID: ${users[1].id}`)
 
   // 카테고리 생성
   const categories = await Promise.all([
@@ -160,8 +162,8 @@ async function main() {
         value: 5000,
         minAmount: 30000, // 3만원 이상 구매시
         isActive: true,
-        validFrom: new Date('2024-01-01'),
-        validTo: new Date('2024-12-31')
+        validFrom: new Date('2025-01-01'),
+        validTo: new Date('2025-12-31')
       }
     }),
     prisma.discount.create({
@@ -172,8 +174,8 @@ async function main() {
         value: 10000,
         minAmount: 50000, // 5만원 이상 구매시
         isActive: true,
-        validFrom: new Date('2024-01-01'),
-        validTo: new Date('2024-12-31')
+        validFrom: new Date('2025-01-01'),
+        validTo: new Date('2025-12-31')
       }
     }),
     prisma.discount.create({
@@ -184,8 +186,8 @@ async function main() {
         value: 15000,
         minAmount: 80000, // 8만원 이상 구매시
         isActive: true,
-        validFrom: new Date('2024-01-01'),
-        validTo: new Date('2024-12-31')
+        validFrom: new Date('2025-01-01'),
+        validTo: new Date('2025-12-31')
       }
     }),
     prisma.discount.create({
@@ -196,21 +198,8 @@ async function main() {
         value: 25000,
         minAmount: 100000, // 10만원 이상 구매시
         isActive: true,
-        validFrom: new Date('2024-01-01'),
-        validTo: new Date('2024-12-31')
-      }
-    }),
-    prisma.discount.create({
-      data: {
-        name: '대량구매 10% 할인',
-        description: '대량 구매시 10% 할인 (최대 3만원)',
-        type: 'PERCENTAGE',
-        value: 10,
-        minAmount: 200000, // 20만원 이상 구매시
-        maxAmount: 30000,
-        isActive: true,
-        validFrom: new Date('2024-01-01'),
-        validTo: new Date('2024-12-31')
+        validFrom: new Date('2025-01-01'),
+        validTo: new Date('2025-12-31')
       }
     }),
     prisma.discount.create({
@@ -221,8 +210,8 @@ async function main() {
         value: 7000,
         minAmount: 40000, // 4만원 이상 구매시
         isActive: true,
-        validFrom: new Date('2024-01-01'),
-        validTo: new Date('2024-12-31')
+        validFrom: new Date('2025-01-01'),
+        validTo: new Date('2025-12-31')
       }
     })
   ])
@@ -290,7 +279,7 @@ async function main() {
   console.log(`  👥 사용자: ${users.length}명`)
   console.log(`  📂 카테고리: ${categories.length}개`)
   console.log(`  📦 상품: ${products.length}개`)
-  console.log(`  🎟️ 할인정책: ${discounts.length}개 (정액할인 중심)`)
+  console.log(`  🎟️ 할인정책: ${discounts.length}개 (정액할인만)`)
   console.log(`  🛒 장바구니 아이템: 3개`)
   console.log(`  📋 샘플 주문: 1개`)
   console.log('')
@@ -300,7 +289,6 @@ async function main() {
   console.log('  • VIP 회원 15,000원 할인 (8만원 이상)')
   console.log('  • 프리미엄 회원 25,000원 할인 (10만원 이상)')
   console.log('  • 주말 특가 7,000원 할인 (4만원 이상)')
-  console.log('  • 대량구매 10% 할인 (20만원 이상, 최대 3만원)')
   console.log('')
   console.log('🌐 서버 주소: http://localhost:3030')
 }

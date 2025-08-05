@@ -34,6 +34,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // 정률 할인은 현재 지원하지 않음
+    if (discount.type === 'PERCENTAGE') {
+      return NextResponse.json(
+        { error: '정률 할인은 현재 지원하지 않습니다' },
+        { status: 400 }
+      )
+    }
+
     const now = new Date()
     if (discount.validFrom > now || discount.validTo < now) {
       return NextResponse.json(

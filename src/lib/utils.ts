@@ -24,12 +24,8 @@ export function calculateDiscount(
   if (discountType === 'FIXED_AMOUNT') {
     discountAmount = discountValue
   } else if (discountType === 'PERCENTAGE') {
-    discountAmount = Math.floor((totalAmount * discountValue) / 100)
-    
-    // 최대 할인 금액 체크
-    if (maxAmount && discountAmount > maxAmount) {
-      discountAmount = maxAmount
-    }
+    // 정률 할인은 현재 지원하지 않음
+    return 0
   }
 
   // 할인 금액이 총 금액을 초과하지 않도록 제한

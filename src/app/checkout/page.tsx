@@ -42,7 +42,7 @@ export default function CheckoutPage() {
   const [shippingAddress, setShippingAddress] = useState<string>('')
 
   // 현재는 하드코딩된 사용자 ID 사용 (실제로는 인증 시스템에서 가져와야 함)
-  const userId = 'test-user-1'
+  const userId = 'cmdy6ozgb0000qis4qjrb6z7z'
 
   useEffect(() => {
     loadDataBasedOnMode()
